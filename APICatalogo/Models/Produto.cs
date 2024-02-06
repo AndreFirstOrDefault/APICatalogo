@@ -9,4 +9,10 @@ public class Produto
     public string? ImagemUrl { get; set; }
     public float Estoque { get; set; }
     public DateTime DataCadastro { get; set; }
+
+    // Mapeia para a chave estrangeira
+    public int CategoriaId { get; set; }
+
+    // Propriedade de navegação para indicar que um produto possui uma categoria
+    public Categoria? Categoria { get; set; }
 }
