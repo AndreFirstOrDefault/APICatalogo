@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace APICatalogo.Models;
 
@@ -32,5 +33,6 @@ public class Produto
     public int CategoriaId { get; set; }
 
     // Propriedade de navegação para indicar que um produto possui uma categoria
+    [JsonIgnore]
     public Categoria? Categoria { get; set; }
 }
