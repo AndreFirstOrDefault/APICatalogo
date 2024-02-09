@@ -1,6 +1,7 @@
 ﻿using APICatalogo.Context;
 using APICatalogo.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers;
@@ -35,8 +36,12 @@ public class ProdutosController : Controller
     }
 
     [HttpGet("{id:int:min(1)}", Name= "ObterProduto")]
+    //public async Task<ActionResult<Produto>> GetAsync(int id, [BindRequired] string nome)
+    // public async Task<ActionResult<Produto>> GetAsync([FromQuery]int id) // = https://localhost:7128/produtos/1/?id=2
     public async Task<ActionResult<Produto>> GetAsync(int id)
     {
+        //var nomeProduto = nome;
+
         var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
         if(produto is null)
         {
