@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace APICatalogo.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]")] // produtos
 public class ProdutosController : Controller
 {
     private readonly AppDbContext _context;
@@ -18,48 +18,48 @@ public class ProdutosController : Controller
 
     // 3 motivos para usar IEnumerable:
     // 1 - interface somente leitura
-    // 2 - permite adiar a execução (trabalha por demanda)
+    // 2 - permite adiar a execução (trabalha por demandpra)
     // 3 - não precisa ter toda a coleção na memória
 
     // Usar ActionResult
 
-    [HttpGet]
-    public ActionResult<IEnumerable<Produto>> Get()
+    [HttpGet] 
+    public async Task<ActionResult<IEnumerable<Produto>>> GetAsync()
     {
-        var produtos = _context.Produtos.AsNoTracking().ToList();
+        var produtos = _context.Produtos.AsNoTracking();
         if(produtos is null)
         {
             return NotFound("Produtos não encontrados...");
         }
-        return produtos.Take(10).ToList();
+        return await produtos.Take(10).ToListAsync();
     }
 
-    [HttpGet("{id:int}", Name= "ObterProduto")]
-    public ActionResult<Produto> Get(int id)
+    [HttpGet("{id:int:min(1)}", Name= "ObterProduto")]
+    public async Task<ActionResult<Produto>> GetAsync(int id)
     {
-        var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
+        var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
         if(produto is null)
         {
             return NotFound("Produto não encontrado...");
         }
 
-        return produto;
+        return  produto;
     }
 
     [HttpPost]
-    public ActionResult Post(Produto produto)
+    public async Task<ActionResult> PostAsync(Produto produto)
     {
         if (produto is null)
             return BadRequest();
 
-        _context.Produtos.Add(produto);
+       await _context.Produtos.AddAsync(produto);
         _context.SaveChanges();
-        return new CreatedAtRouteResult("ObterProduto",
+        return  new CreatedAtRouteResult("ObterProduto",
             new {id=produto.ProdutoId},produto);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id,Produto produto) 
+    public async Task <ActionResult> PutAsync(int id,Produto produto) 
     {
         if(id != produto.ProdutoId)
         {
@@ -67,15 +67,15 @@ public class ProdutosController : Controller
         }
 
         _context.Entry(produto).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return Ok(produto);
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> DeleteAsync(int id)
     {
-        var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
+        var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.ProdutoId == id);
         //var produto = _context.Produtos.Find(id);
 
         if(produto is null)

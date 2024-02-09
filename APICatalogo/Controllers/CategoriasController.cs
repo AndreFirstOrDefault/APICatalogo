@@ -16,19 +16,19 @@ public class CategoriasController : Controller
     }
 
     [HttpGet("produtos")]
-    public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
+    public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriasProdutosAsync()
     {
         //return _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToList();
         return _context.Categorias.AsNoTracking().Include(p => p.Produtos).Where(p => p.CategoriaId <= 5).ToList();
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Categoria>> Get()
+    public async Task<ActionResult<IEnumerable<Categoria>>> GetAsync()
     {
         try
         {
             //throw new DataMisalignedException();
-            return _context.Categorias.AsNoTracking().ToList();
+            return await _context.Categorias.AsNoTracking().ToListAsync();
         }
         catch (Exception)
         {
@@ -40,12 +40,12 @@ public class CategoriasController : Controller
     }
 
     [HttpGet("{id:int}",Name ="ObterCategoria")]
-    public ActionResult<Categoria> Get(int id)
+    public async Task<ActionResult<Categoria>> GetAsync(int id)
     {
         try
         {
             //throw new DataMisalignedException();
-            var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(c => c.CategoriaId == id);
+            var categoria = await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.CategoriaId == id);
             if (categoria is null)
             {
                 return NotFound("Categoria não encontrada");
@@ -61,43 +61,43 @@ public class CategoriasController : Controller
     }
 
     [HttpPost("{id:int}")]
-    public ActionResult Post(int id, Categoria categoria)
+    public async Task<ActionResult> PostAsync(int id, Categoria categoria)
     {
         if(categoria is null)
         {
             return BadRequest("Dados inválidos");
         }
 
-        _context.Add(categoria);
-        _context.SaveChanges();
+       await _context.AddAsync(categoria);
+        _context.SaveChangesAsync();
 
         return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId }, categoria);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, Categoria categoria)
+    public async Task<ActionResult> PutAsync(int id, Categoria categoria)
     {
         if(id != categoria.CategoriaId)
         {
             return BadRequest();
         }
 
-        _context.Entry(categoria).State = EntityState.Modified;
-        _context.SaveChanges();
+         _context.Entry(categoria).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
         return Ok(categoria);
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> DeleteAsync(int id)
     {
-        var categoria = _context.Categorias.FirstOrDefault(c => c.CategoriaId == id);
+        var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.CategoriaId == id);
         if(categoria is null)
         {
             return NotFound("Categoria com  não encontrada...");
         }
 
         _context.Remove(categoria);
-        _context.SaveChanges();
+        _context.SaveChangesAsync();
         return Ok(categoria);
     }
 }
