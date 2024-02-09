@@ -25,19 +25,39 @@ public class CategoriasController : Controller
     [HttpGet]
     public ActionResult<IEnumerable<Categoria>> Get()
     {
-        return _context.Categorias.AsNoTracking().ToList();
+        try
+        {
+            //throw new DataMisalignedException();
+            return _context.Categorias.AsNoTracking().ToList();
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação...");           
+        }
+        
+        
+        
     }
 
     [HttpGet("{id:int}",Name ="ObterCategoria")]
     public ActionResult<Categoria> Get(int id)
     {
-        var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(c => c.CategoriaId == id);
-        if(categoria is null)
+        try
         {
-            return NotFound("Categoria não encontrada");
-        }
+            //throw new DataMisalignedException();
+            var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(c => c.CategoriaId == id);
+            if (categoria is null)
+            {
+                return NotFound("Categoria não encontrada");
+            }
 
-        return Ok(categoria);
+            return Ok(categoria);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação...");
+        }
+        
     }
 
     [HttpPost("{id:int}")]
@@ -45,7 +65,7 @@ public class CategoriasController : Controller
     {
         if(categoria is null)
         {
-            return BadRequest();
+            return BadRequest("Dados inválidos");
         }
 
         _context.Add(categoria);
@@ -73,7 +93,7 @@ public class CategoriasController : Controller
         var categoria = _context.Categorias.FirstOrDefault(c => c.CategoriaId == id);
         if(categoria is null)
         {
-            return NotFound("Categoria não encontrada...");
+            return NotFound("Categoria com  não encontrada...");
         }
 
         _context.Remove(categoria);
