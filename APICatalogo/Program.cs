@@ -13,6 +13,9 @@ builder.Services.AddSwaggerGen();
 
 string? mysqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 
+var valor1 = builder.Configuration["chave1"];
+var valor2 = builder.Configuration["secao1:chave2"];
+
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseMySql(mysqlConnection,ServerVersion.AutoDetect(mysqlConnection)));
 
@@ -26,8 +29,8 @@ var app = builder.Build();
 //Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

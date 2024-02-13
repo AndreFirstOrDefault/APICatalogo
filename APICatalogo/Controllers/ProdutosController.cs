@@ -23,11 +23,11 @@ public class ProdutosController : Controller
 
     // Usar ActionResult
 
-    [HttpGet] 
+    [HttpGet]
     public async Task<ActionResult<IEnumerable<Produto>>> GetAsync()
     {
         var produtos = _context.Produtos.AsNoTracking();
-        if(produtos is null)
+        if (produtos is null)
         {
             return NotFound("Produtos não encontrados...");
         }
@@ -91,5 +91,7 @@ public class ProdutosController : Controller
 
         return Ok(produto);
     }
+
+    
 
 }
