@@ -1,5 +1,6 @@
 using APICatalogo.Context;
 using APICatalogo.Extensions;
+using APICatalogo.Filters;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -19,6 +20,9 @@ var valor2 = builder.Configuration["secao1:chave2"];
 
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseMySql(mysqlConnection,ServerVersion.AutoDetect(mysqlConnection)));
+
+// Registrando o serviço do filtro
+builder.Services.AddScoped<ApiLoggingFilter>();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
