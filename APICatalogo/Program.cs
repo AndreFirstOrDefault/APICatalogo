@@ -2,6 +2,8 @@ using APICatalogo.Context;
 using APICatalogo.Extensions;
 using APICatalogo.Filters;
 using APICatalogo.Logging;
+using APICatalogo.Repositories.Implements;
+using APICatalogo.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -24,6 +26,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Registrando o serviço do filtro
 builder.Services.AddScoped<ApiLoggingFilter>();
+
+// Registrando o repositório
+builder.Services.AddScoped<ICategoriaRepository,CategoriaRepository>();
 
 // Registrando o serviço de logger
 builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration

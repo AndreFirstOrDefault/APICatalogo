@@ -34,7 +34,7 @@ public class CategoriaRepository : ICategoriaRepository
         return categoria;
     }
     
-    public Categoria Update(int id, Categoria categoria)
+    public Categoria Update(Categoria categoria)
     {
         if (categoria == null)
             throw new ArgumentNullException(nameof(categoria));
