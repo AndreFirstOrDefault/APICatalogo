@@ -56,6 +56,14 @@ public class CategoriasController : Controller
     [HttpGet("{id:int}",Name ="ObterCategoria")]
     public async Task<ActionResult<Categoria>> GetAsync(int id)
     {
+        //throw new Exception("Exceção ao retornar a categoria pelo Id");
+
+        //string[] teste = null;
+        //if(teste.Length > 0)
+        //{
+
+        //}
+
         try
         {
             //throw new DataMisalignedException();
