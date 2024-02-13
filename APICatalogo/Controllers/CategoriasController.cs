@@ -11,11 +11,13 @@ public class CategoriasController : Controller
 {
     private readonly AppDbContext _context;
     private readonly IConfiguration _configuration;
+    private readonly ILogger _logger;
 
-    public CategoriasController(AppDbContext context, IConfiguration configuration)
+    public CategoriasController(AppDbContext context, IConfiguration configuration, ILogger<CategoriasController> logger)
     {
         _context = context;
         _configuration = configuration;
+        _logger = logger;
 
     }
 
@@ -33,14 +35,18 @@ public class CategoriasController : Controller
     [HttpGet("produtos")]
     public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriasProdutosAsync()
     {
+        _logger.LogInformation(" =============== ========== GET api/categorias/produtos ============= =====");
+
         //return _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToList();
         return _context.Categorias.AsNoTracking().Include(p => p.Produtos).Where(p => p.CategoriaId <= 5).ToList();
     }
 
     [HttpGet]
-    [ServiceFilter(typeof(ApiLoggingFilter))]
+    //[ServiceFilter(typeof(ApiLoggingFilter))]
     public async Task<ActionResult<IEnumerable<Categoria>>> GetAsync()
     {
+        _logger.LogInformation(" =============== ========== GET api/categorias ============= =====");
+
         try
         {
             //throw new DataMisalignedException();
@@ -70,10 +76,16 @@ public class CategoriasController : Controller
         {
             //throw new DataMisalignedException();
             var categoria = await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.CategoriaId == id);
+
+            _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} ============= =====");
+
             if (categoria is null)
             {
+                _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} NOT FOUND============= =====");
                 return NotFound("Categoria não encontrada");
             }
+
+            
 
             return Ok(categoria);
         }
