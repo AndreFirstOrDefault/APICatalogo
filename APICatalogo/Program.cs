@@ -1,6 +1,7 @@
 using APICatalogo.Context;
 using APICatalogo.Extensions;
 using APICatalogo.Filters;
+using APICatalogo.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -24,7 +25,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Registrando o serviço do filtro
 builder.Services.AddScoped<ApiLoggingFilter>();
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+// Registrando o serviço de logger
+builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
+{
+    LogLevel = LogLevel.Information
+}));
+
+// Registrando o filtro global para todos os controladores
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ApiLoggingFilter));
+})
+.AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });

@@ -47,52 +47,24 @@ public class CategoriasController : Controller
     {
         _logger.LogInformation(" =============== ========== GET api/categorias ============= =====");
 
-        try
-        {
-            //throw new DataMisalignedException();
-            return await _context.Categorias.AsNoTracking().ToListAsync();
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação...");           
-        }
-        
-        
-        
+        return await _context.Categorias.AsNoTracking().ToListAsync();
+               
     }
 
     [HttpGet("{id:int}",Name ="ObterCategoria")]
     public async Task<ActionResult<Categoria>> GetAsync(int id)
     {
-        //throw new Exception("Exceção ao retornar a categoria pelo Id");
+        var categoria = await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.CategoriaId == id);
 
-        //string[] teste = null;
-        //if(teste.Length > 0)
-        //{
+        _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} ============= =====");
 
-        //}
-
-        try
+        if (categoria is null)
         {
-            //throw new DataMisalignedException();
-            var categoria = await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.CategoriaId == id);
-
-            _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} ============= =====");
-
-            if (categoria is null)
-            {
-                _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} NOT FOUND============= =====");
-                return NotFound("Categoria não encontrada");
-            }
-
-            
-
-            return Ok(categoria);
+            _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} NOT FOUND============= =====");
+            return NotFound("Categoria não encontrada");
         }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação...");
-        }
+        return Ok(categoria);
+          
         
     }
 
