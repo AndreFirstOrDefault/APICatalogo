@@ -33,6 +33,9 @@ builder.Services.AddScoped<ICategoriaRepository,CategoriaRepository>();
 // Registrando o repositório de produto
 builder.Services.AddScoped<IProdutoRepository,ProdutoRepository>();
 
+// Registrando o repositório genérico
+builder.Services.AddScoped(typeof(IRepository<>), typeof(IRepository<>));
+
 // Registrando o serviço de logger
 builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
 {
