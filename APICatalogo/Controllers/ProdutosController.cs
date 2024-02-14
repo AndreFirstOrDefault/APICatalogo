@@ -1,5 +1,4 @@
 ﻿using APICatalogo.Models;
-using APICatalogo.Repositories.Implements;
 using APICatalogo.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

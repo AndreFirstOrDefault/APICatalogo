@@ -7,34 +7,31 @@ namespace APICatalogo.Controllers;
 [Route("[controller]")]
 public class CategoriasController : Controller
 {
-    private readonly IRepository<Categoria> _repository;
-    private readonly IConfiguration _configuration;
-    private readonly ILogger _logger;
+    private readonly ICategoriaRepository _repository;
+    //private readonly IConfiguration _configuration;
+    //private readonly ILogger _logger;
 
-    public CategoriasController(IRepository<Categoria> repository, IConfiguration configuration, ILogger<CategoriasController> logger)
+    public CategoriasController(ICategoriaRepository repository/*, IConfiguration configuration, ILogger<CategoriasController> logger*/)
     {
         _repository = repository;
-        _configuration = configuration;
-        _logger = logger;
-
     }
 
-    [HttpGet("LerArquivoConfiguracao")]
-    public string GetValores()
-    {
-        var valor1 = _configuration ["chave1"];
-        var valor2 = _configuration ["chave2"];
+    //[HttpGet("LerArquivoConfiguracao")]
+    //public string GetValores()
+    //{
+    //    var valor1 = _configuration ["chave1"];
+    //    var valor2 = _configuration ["chave2"];
 
-        var secao1 = _configuration ["secao1:chave2"];
+    //    var secao1 = _configuration ["secao1:chave2"];
 
-        return $"Chave1 = {valor1} \nChave2 = {valor2} \nSeção1 => Chave2 = {secao1}";
-    }
+    //    return $"Chave1 = {valor1} \nChave2 = {valor2} \nSeção1 => Chave2 = {secao1}";
+    //}
 
     [HttpGet]
     //[ServiceFilter(typeof(ApiLoggingFilter))]
     public ActionResult<IEnumerable<Categoria>> Get()
     {
-        _logger.LogInformation(" =============== ========== GET api/categorias ============= =====");
+        //_logger.LogInformation(" =============== ========== GET api/categorias ============= =====");
 
         var categorias = _repository.GetAll();
         return Ok(categorias);
@@ -46,11 +43,11 @@ public class CategoriasController : Controller
     {
         var categoria = _repository.Get(c => c.CategoriaId == id);
 
-        _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} ============= =====");
+       // _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} ============= =====");
 
         if (categoria is null)
         {
-            _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} NOT FOUND============= =====");
+            //_logger.LogInformation($" =============== ========== GET api/categorias/id = {id} NOT FOUND============= =====");
             return NotFound("Categoria não encontrada");
         }
         return Ok(categoria);
