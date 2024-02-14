@@ -27,8 +27,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Registrando o serviço do filtro
 builder.Services.AddScoped<ApiLoggingFilter>();
 
-// Registrando o repositório
+// Registrando o repositório de categoria
 builder.Services.AddScoped<ICategoriaRepository,CategoriaRepository>();
+
+// Registrando o repositório de produto
+builder.Services.AddScoped<IProdutoRepository,ProdutoRepository>();
 
 // Registrando o serviço de logger
 builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration

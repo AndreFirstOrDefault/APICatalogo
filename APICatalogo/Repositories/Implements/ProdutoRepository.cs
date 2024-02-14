@@ -14,41 +14,58 @@ public class ProdutoRepository : IProdutoRepository
         _context = context;
     }
 
-    public IEnumerable<Produto> GetProdutos()
+    public IQueryable<Produto> GetProdutos()
     {
-        return _context.Produtos.ToList();
+        return _context.Produtos;
     }
 
     public Produto GetProduto(int id)
     {
-        return _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
+        var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
+        if(produto is null)
+        {
+            throw new InvalidOperationException("O produto é nulo");
+        }
+
+        return produto;
         
     }
 
     public Produto Create(Produto produto)
     {
         if(produto is null) 
-            throw new ArgumentNullException(nameof(produto));
-         _context.Produtos.Add(produto);
-        return produto;
-    }
-
-    public Produto Update(Produto produto)
-    {
-        if( produto is null)
-            throw new ArgumentNullException(nameof(produto));
-        _context.Entry(produto).State = EntityState.Modified;
+            throw new InvalidOperationException("O produto é nulo");
+        _context.Produtos.Add(produto);
         _context.SaveChanges();
         return produto;
     }
 
-    public Produto Delete(int id)
+    public bool Update(Produto produto)
     {
+        if( produto is null)
+            throw new InvalidOperationException("O produto é nulo");
+
+        if (_context.Produtos.Any(p => p.ProdutoId == produto.ProdutoId))
+        {
+            _context.Produtos.Update(produto);
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
+    public bool Delete(int id)
+    {
+        // Posso usar o Find pq o id é chave primária
         var produto = _context.Produtos.Find(id);
-        if(produto is null ) 
-            throw new ArgumentNullException(nameof(produto));
-        _context.Produtos.Remove(produto);
-        return produto;
+        if(produto != null)
+        {
+            _context.Remove(produto);
+            _context.SaveChanges();
+            return true;
+
+        }
+        return false;
 
     }
     

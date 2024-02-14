@@ -70,8 +70,8 @@ public class CategoriasController : Controller
         
     }
 
-    [HttpPost("{id:int}")]
-    public ActionResult Post(int id, Categoria categoria)
+    [HttpPost]
+    public ActionResult Post(Categoria categoria)
     {
         if(categoria is null)
         {
@@ -79,7 +79,7 @@ public class CategoriasController : Controller
         }
 
         var categoriaCriada = _repository.Create(categoria);
-        return new CreatedAtRouteResult("ObterCategoria", new { id = categoriaCriada.CategoriaId });
+        return new CreatedAtRouteResult("ObterCategoria", new { id = categoriaCriada.CategoriaId,nome = categoriaCriada.Nome, imagemUrl = categoriaCriada.ImagemUrl });
     }
 
     [HttpPut("{id:int}")]
@@ -102,7 +102,7 @@ public class CategoriasController : Controller
         var categoria = _repository.GetCategoria(id);
         if(categoria is null)
         {
-            return NotFound("Categoria com  não encontrada...");
+            return NotFound($"Categoria com id: {id} não encontrada...");
         }
 
         _repository.Delete(id);
