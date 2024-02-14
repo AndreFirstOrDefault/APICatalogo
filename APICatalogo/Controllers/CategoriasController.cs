@@ -1,20 +1,17 @@
-﻿using APICatalogo.Context;
-using APICatalogo.Filters;
-using APICatalogo.Models;
+﻿using APICatalogo.Models;
 using APICatalogo.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers;
 
 [Route("[controller]")]
 public class CategoriasController : Controller
 {
-    private readonly ICategoriaRepository _repository;
+    private readonly IRepository<Categoria> _repository;
     private readonly IConfiguration _configuration;
     private readonly ILogger _logger;
 
-    public CategoriasController(ICategoriaRepository repository, IConfiguration configuration, ILogger<CategoriasController> logger)
+    public CategoriasController(IRepository<Categoria> repository, IConfiguration configuration, ILogger<CategoriasController> logger)
     {
         _repository = repository;
         _configuration = configuration;
@@ -33,22 +30,13 @@ public class CategoriasController : Controller
         return $"Chave1 = {valor1} \nChave2 = {valor2} \nSeção1 => Chave2 = {secao1}";
     }
 
-    //[HttpGet("produtos")]
-    //public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
-    //{
-    //    _logger.LogInformation(" =============== ========== GET api/categorias/produtos ============= =====");
-
-    //    //return _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToList();
-    //    var categorias =  _repository.GetCategorias().;
-    //}
-
     [HttpGet]
     //[ServiceFilter(typeof(ApiLoggingFilter))]
     public ActionResult<IEnumerable<Categoria>> Get()
     {
         _logger.LogInformation(" =============== ========== GET api/categorias ============= =====");
 
-        var categorias = _repository.GetCategorias();
+        var categorias = _repository.GetAll();
         return Ok(categorias);
                
     }
@@ -56,7 +44,7 @@ public class CategoriasController : Controller
     [HttpGet("{id:int}",Name ="ObterCategoria")]
     public ActionResult<Categoria> Get(int id)
     {
-        var categoria = _repository.GetCategoria(id);
+        var categoria = _repository.Get(c => c.CategoriaId == id);
 
         _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} ============= =====");
 
@@ -99,13 +87,13 @@ public class CategoriasController : Controller
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        var categoria = _repository.GetCategoria(id);
+        var categoria = _repository.Get(c => c.CategoriaId == id);
         if(categoria is null)
         {
             return NotFound($"Categoria com id: {id} não encontrada...");
         }
 
-        _repository.Delete(id);
+        _repository.Delete(categoria);
         return Ok(categoria);
     }
 }
