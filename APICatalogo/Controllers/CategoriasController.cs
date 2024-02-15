@@ -7,33 +7,18 @@ namespace APICatalogo.Controllers;
 [Route("[controller]")]
 public class CategoriasController : Controller
 {
-    private readonly ICategoriaRepository _repository;
-    //private readonly IConfiguration _configuration;
-    //private readonly ILogger _logger;
+    private readonly IUnityOfWork _uof;
 
-    public CategoriasController(ICategoriaRepository repository/*, IConfiguration configuration, ILogger<CategoriasController> logger*/)
+    public CategoriasController(IUnityOfWork uof)
     {
-        _repository = repository;
+        _uof = uof;
     }
 
-    //[HttpGet("LerArquivoConfiguracao")]
-    //public string GetValores()
-    //{
-    //    var valor1 = _configuration ["chave1"];
-    //    var valor2 = _configuration ["chave2"];
-
-    //    var secao1 = _configuration ["secao1:chave2"];
-
-    //    return $"Chave1 = {valor1} \nChave2 = {valor2} \nSeção1 => Chave2 = {secao1}";
-    //}
 
     [HttpGet]
-    //[ServiceFilter(typeof(ApiLoggingFilter))]
     public ActionResult<IEnumerable<Categoria>> Get()
     {
-        //_logger.LogInformation(" =============== ========== GET api/categorias ============= =====");
-
-        var categorias = _repository.GetAll();
+        var categorias = _uof.CategoriaRepository.GetAll();
         return Ok(categorias);
                
     }
@@ -41,18 +26,14 @@ public class CategoriasController : Controller
     [HttpGet("{id:int}",Name ="ObterCategoria")]
     public ActionResult<Categoria> Get(int id)
     {
-        var categoria = _repository.Get(c => c.CategoriaId == id);
-
-       // _logger.LogInformation($" =============== ========== GET api/categorias/id = {id} ============= =====");
+        var categoria = _uof.CategoriaRepository.Get(c => c.CategoriaId == id);
 
         if (categoria is null)
         {
-            //_logger.LogInformation($" =============== ========== GET api/categorias/id = {id} NOT FOUND============= =====");
             return NotFound("Categoria não encontrada");
         }
         return Ok(categoria);
-          
-        
+                
     }
 
     [HttpPost]
@@ -63,7 +44,8 @@ public class CategoriasController : Controller
             return BadRequest("Dados inválidos");
         }
 
-        var categoriaCriada = _repository.Create(categoria);
+        var categoriaCriada = _uof.CategoriaRepository.Create(categoria);
+        _uof.Commit();
         return new CreatedAtRouteResult("ObterCategoria", new { id = categoriaCriada.CategoriaId,nome = categoriaCriada.Nome, imagemUrl = categoriaCriada.ImagemUrl });
     }
 
@@ -75,7 +57,8 @@ public class CategoriasController : Controller
             return BadRequest();
         }
 
-        var categoriaAtualizada = _repository.Update(categoria);
+        var categoriaAtualizada = _uof.CategoriaRepository.Update(categoria);
+        _uof.Commit();
         return Ok(categoriaAtualizada);
             
 
@@ -84,13 +67,14 @@ public class CategoriasController : Controller
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        var categoria = _repository.Get(c => c.CategoriaId == id);
+        var categoria = _uof.CategoriaRepository.Get(c => c.CategoriaId == id);
         if(categoria is null)
         {
             return NotFound($"Categoria com id: {id} não encontrada...");
         }
 
-        _repository.Delete(categoria);
+        _uof.CategoriaRepository.Delete(categoria);
+        _uof.Commit();
         return Ok(categoria);
     }
 }
