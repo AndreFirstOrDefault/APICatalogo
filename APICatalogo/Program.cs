@@ -40,10 +40,10 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnityOfWork, UnityOfWork>();
 
 // Registrando o serviço de logger
-builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
-{
-    LogLevel = LogLevel.Information
-}));
+//builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
+//{
+//    LogLevel = LogLevel.Information
+//}));
 
 // Registrando o filtro global para todos os controladores
 builder.Services.AddControllers(options =>

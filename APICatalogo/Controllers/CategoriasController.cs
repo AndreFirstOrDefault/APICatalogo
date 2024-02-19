@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace APICatalogo.Controllers;
 
+[ApiController]
 [Route("[controller]")]
 public class CategoriasController : Controller
 {
@@ -46,7 +47,7 @@ public class CategoriasController : Controller
 
         var categoriaCriada = _uof.CategoriaRepository.Create(categoria);
         _uof.Commit();
-        return new CreatedAtRouteResult("ObterCategoria", new { id = categoriaCriada.CategoriaId,nome = categoriaCriada.Nome, imagemUrl = categoriaCriada.ImagemUrl });
+        return new CreatedAtRouteResult("ObterCategoria", new { id = categoriaCriada.CategoriaId,categoriaCriada });
     }
 
     [HttpPut("{id:int}")]

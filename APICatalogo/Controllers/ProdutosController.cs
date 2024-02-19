@@ -9,23 +9,14 @@ namespace APICatalogo.Controllers;
 [Route("[controller]")] // produtos
 public class ProdutosController : Controller
 {
-    private readonly UnityOfWork _uof;
-
-    // não precisa implementar pq o repositório genérico ja implementa
-    //private readonly IRepository<Produto> _repository;
-    public ProdutosController(UnityOfWork uof)
+    private readonly IUnityOfWork _uof;
+        
+    public ProdutosController(IUnityOfWork uof)
     {
         _uof = uof;
     }
 
-    // 3 motivos para usar IEnumerable:
-    // 1 - interface somente leitura
-    // 2 - permite adiar a execução (trabalha por demandpra)
-    // 3 - não precisa ter toda a coleção na memória
-
-    // Usar ActionResult
-
-    [HttpGet("produtos/{id}")]
+    [HttpGet("categoria/{id}")]
     public ActionResult <IEnumerable<Produto>> GetProdutosPorCategoria(int id)
     {
         var produtos = _uof.ProdutoRepository.GetProdutosPorCategoria(id);
@@ -38,9 +29,9 @@ public class ProdutosController : Controller
     }
 
     [HttpGet]
-    public ActionResult<IQueryable<Produto>> Get()
+    public ActionResult<IEnumerable<Produto>> Get()
     {
-        var produtos = _uof.ProdutoRepository.GetAll().ToList();
+        var produtos = _uof.ProdutoRepository.GetAll();
         if (produtos is null)
         {
             return NotFound("Produtos não encontrados...");
