@@ -1,4 +1,5 @@
-﻿using APICatalogo.Models;
+﻿using APICatalogo.DTOs;
+using APICatalogo.Models;
 using APICatalogo.Repositories.Implements;
 using APICatalogo.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ public class ProdutosController : Controller
     }
 
     [HttpGet("categoria/{id}")]
-    public ActionResult <IEnumerable<Produto>> GetProdutosPorCategoria(int id)
+    public ActionResult <IEnumerable<ProdutoDTO>> GetProdutosPorCategoria(int id)
     {
         var produtos = _uof.ProdutoRepository.GetProdutosPorCategoria(id);
         if(produtos is null)
@@ -29,7 +30,7 @@ public class ProdutosController : Controller
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Produto>> Get()
+    public ActionResult<IEnumerable<ProdutoDTO>> Get()
     {
         var produtos = _uof.ProdutoRepository.GetAll();
         if (produtos is null)
@@ -40,7 +41,7 @@ public class ProdutosController : Controller
     }
 
     [HttpGet("{id:int:min(1)}", Name= "ObterProduto")]
-    public ActionResult<Produto> Get(int id)
+    public ActionResult<ProdutoDTO> Get(int id)
     {
         var produto = _uof.ProdutoRepository.Get(p => p.ProdutoId == id);
         if(produto is null)
@@ -52,7 +53,7 @@ public class ProdutosController : Controller
     }
 
     [HttpPost]
-    public ActionResult Post(Produto produto)
+    public ActionResult<ProdutoDTO> Post(ProdutoDTO produtoDTO)
     {
         if (produto is null)
             return BadRequest();
@@ -64,7 +65,7 @@ public class ProdutosController : Controller
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id,Produto produto) 
+    public ActionResult<ProdutoDTO> Put(int id,ProdutoDTO produtoDTO) 
     {
         if(id != produto.ProdutoId)
         {
@@ -79,7 +80,7 @@ public class ProdutosController : Controller
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public ActionResult<ProdutoDTO> Delete(int id)
     {
         var produto = _uof.ProdutoRepository.Get(p => p.ProdutoId == id);
 

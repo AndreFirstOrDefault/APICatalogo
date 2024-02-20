@@ -1,7 +1,7 @@
 using APICatalogo.Context;
+using APICatalogo.DTOs.Mappings;
 using APICatalogo.Extensions;
 using APICatalogo.Filters;
-using APICatalogo.Logging;
 using APICatalogo.Repositories.Implements;
 using APICatalogo.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +38,9 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // Registrando o serviço de UnitOfWork
 builder.Services.AddScoped<IUnityOfWork, UnityOfWork>();
+
+// Registrando o serviço de AutoMapper
+builder.Services.AddAutoMapper(typeof(ProdutoDTOMappingProfile));
 
 // Registrando o serviço de logger
 //builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
