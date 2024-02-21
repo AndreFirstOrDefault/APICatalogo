@@ -58,7 +58,7 @@ public class CategoriasController : Controller
         _uof.Commit();
 
         var novaCategoriaDTO = categoriaCriada.ToCategoriaDTO();
-        return new CreatedAtRouteResult("ObterCategoria", new { id = novaCategoriaDTO.CategoriaId,novaCategoriaDTO });
+        return new CreatedAtRouteResult("ObterCategoria", new { id = novaCategoriaDTO.CategoriaId, novaCategoriaDTO });
     }
 
     [HttpPut("{id:int}")]
