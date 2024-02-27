@@ -8,13 +8,13 @@ public class ProdutoDTOUpdateRequest : IValidatableObject
     public float Estoque { get; set; }
 
 
-    public DateTime DataCadastro { get; set; }
+    public DateTime DataCadastro { get; set; } 
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if(DataCadastro.Date <= DateTime.Now.Date)
         {
-            yield return new ValidationResult("A data deve ser maior do que a data atual", new[]
+            yield return new ValidationResult("A data deve ser menor ou igual a data atual", new[]
             {
                 nameof(DataCadastro)
             });
